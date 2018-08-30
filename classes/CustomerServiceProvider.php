@@ -9,7 +9,7 @@ class CustomerServiceProvider extends  AppParentServiceProvider
     
     public function boot()
     {
-        $this->package('ecjia/app-customer', null, dirname(__DIR__));
+        $this->package('ecjia/app-customer');
     }
     
     public function register()
