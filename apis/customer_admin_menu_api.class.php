@@ -28,7 +28,7 @@ class customer_admin_menu_api extends Component_Event_Api {
         );
 
         $menus->add_submenu($submenus);
-        return $menus;
+        //return $menus;
     }
 
 }
