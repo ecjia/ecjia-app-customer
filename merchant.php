@@ -189,8 +189,8 @@ class merchant extends ecjia_merchant {
 	    }
 	    
 	    $db_store_users = RC_DB::table('store_users as s')
-	    ->where(RC_DB::raw('s.store_id'), $_SESSION['store_id'])
-	    ->leftJoin('users as u', RC_DB::raw('u.user_id'), '=', RC_DB::raw('s.user_id'));
+    	    ->where(RC_DB::raw('s.store_id'), $_SESSION['store_id'])
+    	    ->leftJoin('users as u', RC_DB::raw('u.user_id'), '=', RC_DB::raw('s.user_id'));
 	    
 	    if (!empty($filter['keywords'])) {
 	        $db_store_users ->where(RC_DB::raw('u.user_name'), 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
@@ -223,10 +223,18 @@ class merchant extends ecjia_merchant {
                 $rows['avatar_img'] = !empty($rows['avatar_img']) ? RC_Upload::upload_url($rows['avatar_img']) : '';
                 $rows['rank_name'] = $rank['rank_name'];
                 $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '';
+                //订单总金额（普通配送订单，不含退款）
+                $user_order = RC_DB::table('order_info')
+                    ->select(RC_DB::raw("SUM(goods_amount + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee - discount) AS order_amount"))
+                    ->whereIn('order_status', [OS_CONFIRMED, OS_SPLITED])
+                    ->whereIn('pay_status', [PS_PAYED, PS_PAYING])
+                    ->whereIn('shipping_status', [SS_SHIPPED, SS_RECEIVED])
+                    ->where('user_id', $rows['user_id'])->where('store_id', $_SESSION['store_id'])
+                    ->first();
+                $rows['order_amount'] = empty($user_order['order_amount']) ? 0 : price_format($user_order['order_amount']);
                 $users[] = $rows;
             }
         }
-        
         return array('list' => $users, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc(), 'count' => $type_count);
 	}
 	
@@ -253,6 +261,15 @@ class merchant extends ecjia_merchant {
         $rows['rank_name'] = $rank['rank_name'];
         $rows['mobile_phone_format'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '';
         $rows['user_money'] = !empty($rows['user_money']) ? price_format($rows['user_money']) : '0';
+        //订单总金额（普通配送订单，不含退款）
+        $user_order = RC_DB::table('order_info')
+            ->select(RC_DB::raw("SUM(goods_amount + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee - discount) AS order_amount"))
+            ->whereIn('order_status', [OS_CONFIRMED, OS_SPLITED])
+            ->whereIn('pay_status', [PS_PAYED, PS_PAYING])
+            ->whereIn('shipping_status', [SS_SHIPPED, SS_RECEIVED])
+            ->where('user_id', $rows['user_id'])->where('store_id', $_SESSION['store_id'])
+            ->first();
+        $rows['order_amount'] = empty($user_order['order_amount']) ? 0 : price_format($user_order['order_amount']);
         
         return $rows;
 	}

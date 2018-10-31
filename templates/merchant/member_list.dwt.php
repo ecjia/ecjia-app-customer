@@ -64,7 +64,7 @@ ecjia.merchant.customer_list.init();
 								</div>
 							</td>
 							<td>{$list.buy_times}</td>
-							<td>xx</td>
+							<td>{$list.order_amount}</td>
 							<td>{$list.rank_name}</td>
 							<td>
 								<span>{$list.last_buy_time_format}</span>
