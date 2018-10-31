@@ -9,8 +9,8 @@
 <!-- {block name="home-content"} -->
 <style>
 .table { margin:0}
-.table>tbody>tr>td{ border:none;    padding: 4px}
-.table-oddtd tr>td:nth-child(odd) {
+.table-info>tbody>tr>td{ border:none;    padding: 4px}
+.table-info tr>td:nth-child(odd) {
     background-color: #fff;
     border:none;
     padding-right: 0;
@@ -49,7 +49,7 @@
     						<img alt="" src="{if $user_info.avatar_img}{$user_info.avatar_img}{else}{$ecjia_main_static_url}img/ecjia_avatar.jpg{/if}" width="100"><br>
                         </div>
                         <div class="col-sm-10">
-                        	<table class="table table-oddtd">
+                        	<table class="table table-oddtd table-info">
                         		<tr class="user_name_tr">
                         			<td><div align="right">会员名称：</div></td>
                         			<td colspan="3"><h3 class="user_name ecjiafc-red">{$user_info.user_name}</h3> ({$user_info.rank_name})</td>
@@ -161,7 +161,7 @@
 						<tbody>
 							<!-- {foreach from=$order_list.list item=list} -->
 							<tr>
-								<td>{$list.order_sn}</td>
+								<td><a href="{url path='orders/merchant/info' args='order_sn='}{$list.order_sn}" target="_blank">{$list.order_sn}</a></td>
 								<td>{$list.add_time}</td>
 								<td>{$list.consignee}</td>
 								<td>{price_format($list.goods_amount + $list.tax + $list.shipping_fee + $list.insure_fee + $list.pay_fee + $list.pack_fee + $list.card_fee - $list.discount)}</td>
