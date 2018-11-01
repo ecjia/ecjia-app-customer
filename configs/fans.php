@@ -6,8 +6,10 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 return array(
     'referer' => [
-        'buy' => '购买',
-        'cashier_suggest' => '收银员推荐 ',
+        'iphone' => 'iPhone',
+        'android' => 'Android',
+        'h5' => 'H5',
+        'weapp' => '微信小程序',
     ]
 );
 
