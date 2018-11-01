@@ -309,10 +309,12 @@ class merchant extends ecjia_merchant {
 	    
 	    $users = array();
 	    if (!empty($result)) {
+	        $fans_config = RC_Loader::load_app_config('fans', 'customer');
 	        foreach ($result as $rows) {
 	            $rows['add_time_format'] = !empty($rows['add_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['add_time']) : '';
 	            $rows['last_visit_time_format'] = !empty($rows['last_visit_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['last_visit_time']): '';
 	            $rows['avatar_img'] = !empty($rows['avatar_img']) ? RC_Upload::upload_url($rows['avatar_img']) : '';
+	            $rows['referer'] = isset($fans_config['referer'][$rows['referer']]) ? $fans_config['referer'][$rows['referer']] : '未知';
 	            $users[] = $rows;
 	        }
 	    }
