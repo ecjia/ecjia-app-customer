@@ -67,9 +67,6 @@ class customer_merchant_fans_visit_api extends Component_Event_Api {
 	    
 	    $user_id = $options['user_id'];
 	    $store_id = $options['store_id'];
-	    if (!ecjia::config('comment_award_open')) {
-	        return new ecjia_error('comment_award_close', '评论送积分未开启');
-	    }
 	    
 	    $collect = RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->first();
 	    if (empty($collect)) {
