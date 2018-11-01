@@ -56,7 +56,6 @@ class merchant extends ecjia_merchant {
     public function __construct() {
         parent::__construct();
         
-        
         RC_Style::enqueue_style('jquery-placeholder');
         RC_Style::enqueue_style('uniform-aristo');
         RC_Script::enqueue_script('smoke');
@@ -94,7 +93,7 @@ class merchant extends ecjia_merchant {
 	public function fans() {
 	    $this->admin_priv('store_fans');
 	    ecjia_screen::get_current_screen()->remove_last_nav_here();
-	    ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('商家会员'));
+	    ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('商家粉丝'));
 	    $this->assign('ur_here', '商家粉丝');
 	    
 	    $user_list = $this->get_collect_store_user_list();
@@ -126,7 +125,6 @@ class merchant extends ecjia_merchant {
 	    
 	    //用户信息
 	    $user_info = $this->get_store_user_info($user_id);
-	    $this->assign('user_info', $user_info);
 	    
 	    $manage_mode = RC_DB::table('store_franchisee')->where('store_id', $_SESSION['store_id'])->pluck('manage_mode');
 	    $this->assign('manage_mode', $manage_mode);
@@ -140,7 +138,13 @@ class merchant extends ecjia_merchant {
 	    //订单列表
 	    $order_list = $this->get_user_order_list($user_id);
 	    $this->assign('order_list', $order_list);
+	    if($order_list) {
+	        //最新订单位置
+	        $user_info['province_name']  = ecjia_region::getRegionName($order_list['list'][0]['province']);
+	        $user_info['city_name']    	= ecjia_region::getRegionName($order_list['list'][0]['city']);
+	    }
 // 	    _dump($order_list,1);
+	    $this->assign('user_info', $user_info);
 	    
 	    $this->display('member_info.dwt');
 	}

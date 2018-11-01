@@ -73,10 +73,10 @@
                         			<td><div align="right">最近购买时间：</div></td>
                         			<td>{$user_info.last_buy_time_format}</td>
                         		</tr>
-                        		<!-- <tr>
-                        			<td><div align="right">最近登录地区：</div></td>
-                        			<td colspan="3">{$user_info.area}</td>
-                        		</tr> -->
+                        		<tr>
+                        			<td><div align="right">最近收货地区：</div></td>
+                        			<td colspan="3">{if $user_info.city_name}{$user_info.province_name} {$user_info.city_name}{else}暂无{/if}</td>
+                        		</tr>
                         	</table>
                         </div>
 					</div>
