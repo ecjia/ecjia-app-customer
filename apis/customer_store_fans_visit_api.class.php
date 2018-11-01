@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 //商家粉丝访问
-class customer_merchant_fans_visit_api extends Component_Event_Api {
+class customer_store_fans_visit_api extends Component_Event_Api {
     /**
      * @param $options
      * user_id store_id longitude latitude
@@ -59,7 +59,7 @@ class customer_merchant_fans_visit_api extends Component_Event_Api {
 	        return new ecjia_error('invalid_parameter', '参数无效');
 	    }
 	    //设置缓存key
-	    $cache_id = 'merchant_fans_visit-'.$options['store_id'].'-'.$options['user_id'];
+	    $cache_id = 'store_fans_visit-'.$options['store_id'].'-'.$options['user_id'];
 	    $cache = RC_Cache::app_cache_get($cache_id, 'customer');
 	    if($cache) {
 	        return true;
