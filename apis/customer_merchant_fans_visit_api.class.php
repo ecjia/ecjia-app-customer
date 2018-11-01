@@ -58,6 +58,13 @@ class customer_merchant_fans_visit_api extends Component_Event_Api {
 	    if (empty($options['user_id']) || empty($options['store_id'])) {
 	        return new ecjia_error('invalid_parameter', '参数无效');
 	    }
+	    //设置缓存key
+	    $cache_id = 'merchant_fans_visit-'.$options['store_id'].'-'.$options['user_id'];
+	    $cache = RC_Cache::app_cache_get($cache_id, 'customer');
+	    if($cache) {
+	        return true;
+	    }
+	    
 	    $user_id = $options['user_id'];
 	    $store_id = $options['store_id'];
 	    if (!ecjia::config('comment_award_open')) {
@@ -83,13 +90,19 @@ class customer_merchant_fans_visit_api extends Component_Event_Api {
 	    $data = [
 	        'visit_times' => $collect['visit_times'] + 1,
 	        'last_visit_time' => RC_Time::gmtime(),
-	        'last_visit_longitude' => $options['longitude'],
-	        'last_visit_latitude' => $options['latitude'],
 	        'last_visit_ip' => RC_Ip::client_ip(),
 	        'last_visit_area' => $area
 	    ];
+	    if($options['longitude']) {
+	        $data['last_visit_longitude'] = $options['longitude'];
+	    }
+	    if($options['latitude']) {
+	        $data['last_visit_latitude'] = $options['latitude'];
+	    }
 	    
 	    RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
+	    
+	    RC_Cache::app_cache_set($cache_id, true, 'customer', 3600);//记录一小时有效
 	    
 	    return true;
 	}
