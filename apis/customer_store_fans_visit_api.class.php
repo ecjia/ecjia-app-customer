@@ -62,11 +62,8 @@ class customer_store_fans_visit_api extends Component_Event_Api {
 	    $cache_id = 'store_fans_visit-'.$options['store_id'].'-'.$options['user_id'];
 	    $cache = RC_Cache::app_cache_get($cache_id, 'customer');
 	    if($cache) {
-	        //return true;
+	        return true;
 	    }
-	    RC_Logger::getlogger('info')->info('customer_store_fans_visit_api');
-	    RC_Logger::getlogger('info')->info($_SESSION);
-	    RC_Logger::getlogger('info')->info($options);
 	    
 	    $user_id = $options['user_id'];
 	    $store_id = $options['store_id'];
