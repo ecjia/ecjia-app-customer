@@ -66,14 +66,13 @@ class customer_store_user_buy_api extends Component_Event_Api {
 	        $store_id = RC_DB::table('order_info')->where('order_id', $options['order_id'])->where('user_id', $user_id)->pluck('store_id');
 	    }
 	    
-	    
 	    //统计购买次数和金额
 	    //订单总金额（普通配送订单，不含退款）
 	    $user_order = RC_DB::table('order_info')
     	    ->select(RC_DB::raw("SUM(goods_amount + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee - discount) AS buy_amount, count(order_id) AS buy_times, add_time"))
     	    ->whereIn('order_status', [OS_CONFIRMED, OS_SPLITED])
     	    ->whereIn('pay_status', [PS_PAYED, PS_PAYING])
-    	    ->whereIn('shipping_status', [SS_SHIPPED, SS_RECEIVED])
+    	    //->whereIn('shipping_status', [SS_SHIPPED, SS_RECEIVED])
     	    ->where('user_id', $user_id)->where('store_id', $store_id)
     	    ->orderby('order_id', 'desc')
     	    ->first();
@@ -82,20 +81,25 @@ class customer_store_user_buy_api extends Component_Event_Api {
 	        'last_buy_time' => $user_order['add_time'],
 	        'buy_times' => $user_order['buy_times'],
 	        'buy_amount' => $user_order['buy_amount'],
-	    ];	   
+	    ];
 	    
-	    $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
-	    if (empty($store_users)) {
-	        //join_scene
-	        $store_name = !empty($options['store_name']) ? $options['store_name'] : RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
-	        $data['store_id'] = $store_id;
-	        $data['user_id'] = $user_id;
-	        $data['store_name'] = $store_name;
-	        $data['add_time'] = RC_Time::gmtime();
-	        
-	        RC_DB::table('store_users')->insert($data);
+	    //更新商家会员信息
+	    if($user_order['buy_times'] > 0) {
+	        $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
+	        if (empty($store_users)) {
+	            //join_scene
+	            $store_name = !empty($options['store_name']) ? $options['store_name'] : RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
+	            $data['store_id'] = $store_id;
+	            $data['user_id'] = $user_id;
+	            $data['store_name'] = $store_name;
+	            $data['add_time'] = RC_Time::gmtime();
+	            
+	            RC_DB::table('store_users')->insert($data);
+	        } else {
+	            RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
+	        }
 	    } else {
-	        RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
+	        RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
 	    }
 	    
 	    return true;
