@@ -15,7 +15,7 @@
     border:none;
     padding-right: 0;
 }
-.user_name_tr td div { height:36px; line-height:36px;}
+.user_name_tr td div,.user_name_tr td div { height:36px; line-height:36px;}
 .user_name { display:inline-block;}
 </style>
 <div class="page-header">
