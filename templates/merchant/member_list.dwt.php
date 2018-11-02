@@ -44,7 +44,7 @@ ecjia.merchant.customer_list.init();
 							<th>会员</th>
 							<th class="w200">手机号</th>
 							<th class="w130 sorting" data-toggle="sortby" data-sortby="buy_times">购次</th>
-							<th class="w130">消费金额</th>
+							<th class="w130 sorting" data-toggle="sortby" data-sortby="buy_amount">消费金额</th>
 							<th>会员等级</th>
 							<th>最近购买时间</th>
 							<th>开通时间</th>
@@ -64,7 +64,7 @@ ecjia.merchant.customer_list.init();
 								</div>
 							</td>
 							<td>{$list.buy_times}</td>
-							<td>{$list.order_amount}</td>
+							<td>{$list.buy_amount}</td>
 							<td>{$list.rank_name}</td>
 							<td>
 								<span>{if $list.last_buy_time_format}{$list.last_buy_time_format}{else}/{/if}</span>

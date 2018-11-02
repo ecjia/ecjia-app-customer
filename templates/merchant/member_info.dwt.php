@@ -94,10 +94,10 @@
                 <div class="accordion-body in collapse " id="collapseThree">
                 	<div class="panel-body">
                 		{if $manage_mode eq 'self'}
-                		<div class="col-sm-6 ecjiaf-tac">消费金额：{$user_info.order_amount}</div>
+                		<div class="col-sm-6 ecjiaf-tac">消费金额：{$user_info.buy_amount}</div>
                 		<div class="col-sm-6 ecjiaf-tac">可用金额：{$user_info.user_money}</div>
                 		{else}
-                		<div class="col-sm-12 ecjiaf-tac">消费金额：{$user_info.order_amount}</div>
+                		<div class="col-sm-12 ecjiaf-tac">消费金额：{$user_info.buy_amount}</div>
                 		{/if}
                 	</div>
                 </div>
