@@ -71,7 +71,7 @@ class customer_admin_purview_api extends Component_Event_Api {
         		
         );
         
-        return $purviews;
+//         return $purviews;
     }
 }
 
