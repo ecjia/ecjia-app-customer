@@ -59,7 +59,7 @@ ecjia.merchant.customer_list.init();
 							<td>
 								<span>{$list.referer}</span>
 							</td>
-							<td align="center">{if $list.is_store_user}<a href="{url path='customer/merchant/info' args='&user_id='}{$list.user_id}"><i class="fa fa-info-circle" title="查看详情"></i><br>查看详情</a>{else}<i class="fa fa-frown-o" data-original-title="" title=""></i>{/if}</td>
+							<td align="center">{if $list.is_store_user}<a href="{url path='customer/merchant/info' args='&user_id='}{$list.user_id}"><i class="fa fa-check" title="查看详情"></i><br>查看详情</a>{else}<i class="fa fa-times" data-original-title="" title=""></i>{/if}</td>
 						</tr>
 						<!-- {foreachelse} -->
 						<tr>
