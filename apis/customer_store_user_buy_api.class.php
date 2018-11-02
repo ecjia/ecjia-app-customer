@@ -50,17 +50,21 @@ defined('IN_ECJIA') or exit('No permission resources.');
 class customer_store_user_buy_api extends Component_Event_Api {
     /**
      * @param $options
-     * user_id store_id store_name
+     * Y user_id order_id/store_id
+     * N store_name
      * @return array
      */
 	public function call(&$options) {
 		
-	    if (empty($options['user_id']) || empty($options['store_id'])) {
+	    if (empty($options['user_id']) || (empty($options['store_id']) && empty($options['order_id']))) {
 	        return new ecjia_error('invalid_parameter', '参数无效');
 	    }
 	    
 	    $user_id = $options['user_id'];
 	    $store_id = $options['store_id'];
+	    if(empty($store_id)) {
+	        $store_id = RC_DB::table('order_info')->where('order_id', $options['order_id'])->where('user_id', $user_id)->pluck('store_id');
+	    }
 	    
 	    
 	    //统计购买次数和金额
