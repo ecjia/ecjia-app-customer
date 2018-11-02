@@ -95,11 +95,16 @@ class customer_store_user_buy_api extends Component_Event_Api {
 	            $data['add_time'] = RC_Time::gmtime();
 	            
 	            RC_DB::table('store_users')->insert($data);
+	            
+	            //更新粉丝信息
+	            RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 1]);
 	        } else {
 	            RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
 	        }
 	    } else {
 	        RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
+	        //更新粉丝信息
+	        RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 0]);
 	    }
 	    
 	    return true;
