@@ -184,7 +184,7 @@ class merchant extends ecjia_merchant {
 	    
 	    $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : trim($_GET['sort_order']);
 	    $filter['type']   	  = empty($_GET['type'])      	  ? ''                : trim($_GET['type']);
-	    $filter['sort_by'] 	  = 's.id';
+	    $filter['sort_by'] 	  = 's.add_time';
 	    
 	    if (!empty($_GET['sort_by'])) {
 	        if ($_GET['sort_by'] == 'buy_times') {
