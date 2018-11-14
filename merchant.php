@@ -220,7 +220,7 @@ class merchant extends ecjia_merchant {
             foreach ($result as $rows) {
                 $rows['add_time_format'] = !empty($rows['add_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['add_time']) : '';
                 $rows['last_buy_time_format'] = !empty($rows['last_buy_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['last_buy_time']): '';
-                if ($rows['user_rank'] == 0) {
+                if ($rows['user_rank'] == 0 && !empty($rows['user_name'])) {
                     //重新计算会员等级
                     RC_Api::api('user', 'update_user_rank', array('user_id' => $rows['user_id']));
                 }
