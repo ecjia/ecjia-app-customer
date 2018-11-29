@@ -222,9 +222,10 @@ class merchant extends ecjia_merchant {
                 $rows['last_buy_time_format'] = !empty($rows['last_buy_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['last_buy_time']): '';
                 if ($rows['user_rank'] == 0 && !empty($rows['user_name'])) {
                     //重新计算会员等级
-                    RC_Api::api('user', 'update_user_rank', array('user_id' => $rows['user_id']));
+                    $rank = RC_Api::api('user', 'update_user_rank', array('user_id' => $rows['user_id']));
+                } else {
+                    $rank = RC_DB::table('user_rank')->select('rank_id', 'rank_name')->where('rank_id', $rows['user_rank'])->first();
                 }
-                $rank = RC_DB::table('user_rank')->select('rank_id', 'rank_name')->where('rank_id', $rows['user_rank'])->first();
                 $rows['avatar_img'] = !empty($rows['avatar_img']) ? RC_Upload::upload_url($rows['avatar_img']) : '';
                 $rows['rank_name'] = $rank['rank_name'];
                 $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '';
