@@ -11,7 +11,7 @@ return array(
 	'author' 		=> 'ECJIA TEAM',
 	'website' 		=> 'http://www.ecjia.com',
 	'version' 		=> '1.2.1',
-    'copyright' 	=> 'ECJIA Copyright '.date('Y').'.',
+    'copyright' 	=> 'ECJIA Copyright 2014 ~ 2018.',
     'namespace'     => 'Ecjia\App\Customer',
     'provider'      => 'CustomerServiceProvider',
 );
