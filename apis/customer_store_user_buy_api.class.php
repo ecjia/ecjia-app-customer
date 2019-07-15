@@ -62,6 +62,7 @@ class customer_store_user_buy_api extends Component_Event_Api {
 	    
 	    $user_id = $options['user_id'];
 	    $store_id = $options['store_id'];
+	    $join_scene = isset($options['join_scene']) ? $options['join_scene'] : 'buy';
 	    if(empty($store_id)) {
 	        $store_id = RC_DB::table('order_info')->where('order_id', $options['order_id'])->where('user_id', $user_id)->pluck('store_id');
 	    }
@@ -84,32 +85,56 @@ class customer_store_user_buy_api extends Component_Event_Api {
 	    ];
 	    
 	    //更新商家会员信息
-	    if($user_order['buy_times'] > 0) {
-	        $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
-	        if (empty($store_users)) {
-	            //join_scene
-	            $store_name = !empty($options['store_name']) ? $options['store_name'] : RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
-	            if(empty($store_name)) {
-	                return new ecjia_error('not_exist_store', __('店铺不存在', 'customer'));
-	            }
-	            $data['store_id'] = $store_id;
-	            $data['store_name'] = $store_name;
-	            $data['user_id'] = $user_id;
-	            $data['join_scene'] = 'buy';
-	            $data['add_time'] = RC_Time::gmtime();
-	            
-	            RC_DB::table('store_users')->insert($data);
-	            
-	            //更新粉丝信息
-	            RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 1]);
-	        } else {
-	            RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
-	        }
-	    } else {
-	        RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
-	        //更新粉丝信息
-	        RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 0]);
-	    }
+        if ($join_scene == 'affiliate') {
+            $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
+            if (empty($store_users)) {
+                //join_scene
+                $store_name = !empty($options['store_name']) ? $options['store_name'] : RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
+                if(empty($store_name)) {
+                    return new ecjia_error('not_exist_store', __('店铺不存在', 'customer'));
+                }
+                $data['store_id'] = $store_id;
+                $data['store_name'] = $store_name;
+                $data['user_id'] = $user_id;
+                $data['join_scene'] = $join_scene;
+                $data['add_time'] = RC_Time::gmtime();
+
+                RC_DB::table('store_users')->insert($data);
+
+                //更新粉丝信息
+                RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 1]);
+            } else {
+                RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
+            }
+        } else {
+            if($user_order['buy_times'] > 0) {
+                $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
+                if (empty($store_users)) {
+                    //join_scene
+                    $store_name = !empty($options['store_name']) ? $options['store_name'] : RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
+                    if(empty($store_name)) {
+                        return new ecjia_error('not_exist_store', __('店铺不存在', 'customer'));
+                    }
+                    $data['store_id'] = $store_id;
+                    $data['store_name'] = $store_name;
+                    $data['user_id'] = $user_id;
+                    $data['join_scene'] = 'buy';
+                    $data['add_time'] = RC_Time::gmtime();
+
+                    RC_DB::table('store_users')->insert($data);
+
+                    //更新粉丝信息
+                    RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 1]);
+                } else {
+                    RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
+                }
+            } else {
+//	        RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
+                //更新粉丝信息
+                RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 0]);
+            }
+        }
+
 	    
 	    return true;
 	}
