@@ -84,6 +84,9 @@ class merchant extends ecjia_merchant {
 	    
 	    $user_list = $this->get_store_user_list();
 	    $this->assign('user_list', $user_list);
+        $this->assign('filter', $user_list['filter']);
+        $this->assign('type', $user_list['filter']['type']);
+        $this->assign('type_count', $user_list['count']);
 	    $this->assign('form_action', RC_Uri::url('customer/merchant/init'));
 	    $this->assign('search_action', RC_Uri::url('customer/merchant/init'));
 
@@ -183,7 +186,7 @@ class merchant extends ecjia_merchant {
 	    $filter['rank_id']     = empty($_GET['rank_id'])        ? 0                 : intval($_GET['rank_id']);
 	    
 	    $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : remove_xss($_GET['sort_order']);
-	    $filter['type']   	  = empty($_GET['type'])      	  ? ''                : remove_xss($_GET['type']);
+	    $filter['type']   	  = empty($_GET['type'])      	  ? 'buy'             : remove_xss($_GET['type']);
 	    $filter['sort_by'] 	  = 's.add_time';
 	    
 	    if (!empty($_GET['sort_by'])) {
@@ -205,7 +208,15 @@ class merchant extends ecjia_merchant {
 	    if ($filter['rank_id'] && ($filter['rank_id'] > 0)) {
 	        $db_store_users ->where(RC_DB::raw('u.user_rank'), $filter['rank_id']);
 	    }
-	    
+
+        $type_count = $db_store_users->select(RC_DB::raw("SUM(join_scene = 'affiliate') as affiliate"),
+            RC_DB::raw("SUM(join_scene = 'buy') as buy"))->first();
+
+        if ($filter['type']) {
+            $db_store_users->where(RC_DB::raw('s.join_scene'), $filter['type']);
+        }
+
+
 	    $count = $db_store_users->count();
 	    $page = new ecjia_merchant_page($count, $page_size, 5);
         
@@ -234,7 +245,7 @@ class merchant extends ecjia_merchant {
                 $users[] = $rows;
             }
         }
-        return array('list' => $users, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
+        return array('list' => $users, 'filter' => $filter, 'count' => $type_count, 'page' => $page->show(2), 'desc' => $page->page_desc());
 	}
 	
 	private function get_store_user_info($user_id) {
