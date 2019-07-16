@@ -86,6 +86,11 @@ class customer_store_user_buy_api extends Component_Event_Api {
 	    
 	    //更新商家会员信息
         if ($join_scene == 'affiliate') {
+            //一个会员只能绑定到一个店铺
+            $is_exist = RC_DB::table('store_users')->where('join_scene', 'affiliate')->where('store_id', '<>', $store_id)->where('user_id', $user_id)->count();
+            if($is_exist) {
+                return new ecjia_error('already_bind', '该会员已经绑定到其他店铺');
+            }
             $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
             if (empty($store_users)) {
                 //join_scene
@@ -104,6 +109,7 @@ class customer_store_user_buy_api extends Component_Event_Api {
                 //更新粉丝信息
                 RC_DB::table('collect_store')->where('store_id', $store_id)->where('user_id', $user_id)->update(['is_store_user' => 1]);
             } else {
+                $data['join_scene'] = $join_scene;
                 RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
             }
         } else {
