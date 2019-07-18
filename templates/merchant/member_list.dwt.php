@@ -7,6 +7,14 @@ ecjia.merchant.customer_list.init();
 <!-- {/block} -->
 <!-- {block name="home-content"} -->
 
+<div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+        <i class="fa fa-times" data-original-title="" title=""></i>
+    </button>
+    <strong>{t domain="goods"}温馨提示：{/t}</strong>
+    {t domain="goods"}绑定店铺：指扫描了商家推荐二维码并与商家绑定了关系的会员。{/t}<br>
+</div>
+
 <div class="page-header">
 	<h2 class="pull-left">
 	<!-- {if $ur_here}{$ur_here}{/if} -->

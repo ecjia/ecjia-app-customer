@@ -153,24 +153,34 @@
 						<thead>
 							<tr>
 								<th class="w180"><strong>{t domain="customer"}订单号{/t}</strong></th>
+                                <th class="w150"><strong>{t domain="customer"}店铺名称{/t}</strong></th>
 								<th class="w180"><strong>{t domain="customer"}下单时间{/t}</strong></th>
 								<th class="w150"><strong>{t domain="customer"}收货人{/t}</strong></th>
 								<th class="w150"><strong>{t domain="customer"}订单金额{/t}</strong></th>
 								<th class="w150"><strong>{t domain="customer"}订单状态{/t}</strong></th>
+                                <th class="w150"><strong>{t domain="customer"}商家获得佣金{/t}</strong></th>
 							</tr>
 						</thead>
 						<tbody>
 							<!-- {foreach from=$order_list.list item=list} -->
 							<tr>
-								<td><a href="{url path='orders/merchant/info' args='order_sn='}{$list.order_sn}" target="_blank">{$list.order_sn}</a></td>
-								<td>{$list.add_time}</td>
+								<td>
+                                    {if $session_store_id eq $list.store_id}
+                                    <a href="{url path='orders/merchant/info' args='order_sn='}{$list.order_sn}" target="_blank">{$list.order_sn}</a>
+                                    {else}
+                                    {$list.order_sn}
+                                    {/if}
+                                    </td>
+                                <td>{$list.store_name}</td>
+                                <td>{$list.add_time}</td>
 								<td>{$list.consignee}</td>
 								<td>{price_format($list.goods_amount + $list.tax + $list.shipping_fee + $list.insure_fee + $list.pay_fee + $list.pack_fee + $list.card_fee - $list.discount)}</td>
 								<td>{$list.status}</td>
+                                <td>0</td>
 							</tr>
 							<!-- {foreachelse} -->
 							<tr>
-								<td class="no-records w200" colspan="6">{t domain="customer"}暂无记录{/t}</td>
+								<td class="no-records w200" colspan="8">{t domain="customer"}暂无记录{/t}</td>
 							</tr>
 							<!-- {/foreach} -->
 						</tbody>

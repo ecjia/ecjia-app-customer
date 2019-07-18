@@ -83,6 +83,7 @@ class merchant extends ecjia_merchant {
 	    $this->assign('rank_list', $rank_list);
 	    
 	    $user_list = $this->get_store_user_list();
+//	    _dump($user_list,1);
 	    $this->assign('user_list', $user_list);
         $this->assign('filter', $user_list['filter']);
         $this->assign('type', $user_list['filter']['type']);
@@ -148,6 +149,7 @@ class merchant extends ecjia_merchant {
 	    }
 // 	    _dump($order_list,1);
 	    $this->assign('user_info', $user_info);
+        $this->assign('session_store_id', $_SESSION['store_id']);
 
         return $this->display('member_info.dwt');
 	}
@@ -155,11 +157,13 @@ class merchant extends ecjia_merchant {
 	private function get_user_order_list($user_id, $page_size = 10) {
 	    
 // 	    $_GET['sss'] = '#order';
-	    $db_order = RC_DB::table('order_info')->where('user_id', $user_id)->where('store_id', $_SESSION['store_id']);
+	    $db_order = RC_DB::table('order_info as o')->where('user_id', $user_id)/*->where(RC_DB::raw('o.store_id'), $_SESSION['store_id'])*/
+            ->leftJoin('store_franchisee as s', RC_DB::raw('o.store_id'), '=', RC_DB::raw('s.store_id'));
 	    $count = $db_order->count();
 	    $page = new ecjia_merchant_page($count, $page_size, 5);
 	    
 	    $order = $db_order
+           ->select(RC_DB::raw('o.*'), RC_DB::raw('s.merchants_name as store_name'))
 	       ->orderBy('add_time', 'desc')
 	       ->take($page_size)
 	       ->skip($page->start_id-1)
@@ -225,7 +229,7 @@ class merchant extends ecjia_merchant {
 	        ->take($page_size)
 	        ->skip($page->start_id-1)
 	        ->get();
-        
+
         $users = array();
         if (!empty($result)) {
             foreach ($result as $rows) {
