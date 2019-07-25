@@ -113,6 +113,8 @@ class customer_store_user_buy_api extends Component_Event_Api {
                 RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->update($data);
             }
         } else {
+            //其他方式不能成为店铺会员
+            return false;
             if($user_order['buy_times'] > 0) {
                 $store_users = RC_DB::table('store_users')->where('store_id', $store_id)->where('user_id', $user_id)->first();
                 if (empty($store_users)) {
