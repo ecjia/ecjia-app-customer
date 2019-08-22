@@ -83,11 +83,7 @@ class merchant extends ecjia_merchant {
 	    $this->assign('rank_list', $rank_list);
 	    
 	    $user_list = $this->get_store_user_list();
-//	    _dump($user_list,1);
 	    $this->assign('user_list', $user_list);
-        $this->assign('filter', $user_list['filter']);
-        $this->assign('type', $user_list['filter']['type']);
-        $this->assign('type_count', $user_list['count']);
 	    $this->assign('form_action', RC_Uri::url('customer/merchant/init'));
 	    $this->assign('search_action', RC_Uri::url('customer/merchant/init'));
 
@@ -149,7 +145,6 @@ class merchant extends ecjia_merchant {
 	    }
 // 	    _dump($order_list,1);
 	    $this->assign('user_info', $user_info);
-        $this->assign('session_store_id', $_SESSION['store_id']);
 
         return $this->display('member_info.dwt');
 	}
@@ -157,13 +152,11 @@ class merchant extends ecjia_merchant {
 	private function get_user_order_list($user_id, $page_size = 10) {
 	    
 // 	    $_GET['sss'] = '#order';
-	    $db_order = RC_DB::table('order_info as o')->where('user_id', $user_id)/*->where(RC_DB::raw('o.store_id'), $_SESSION['store_id'])*/
-            ->leftJoin('store_franchisee as s', RC_DB::raw('o.store_id'), '=', RC_DB::raw('s.store_id'));
+	    $db_order = RC_DB::table('order_info')->where('user_id', $user_id)->where('store_id', $_SESSION['store_id']);
 	    $count = $db_order->count();
 	    $page = new ecjia_merchant_page($count, $page_size, 5);
 	    
 	    $order = $db_order
-           ->select(RC_DB::raw('o.*'), RC_DB::raw('s.merchants_name as store_name'))
 	       ->orderBy('add_time', 'desc')
 	       ->take($page_size)
 	       ->skip($page->start_id-1)
@@ -190,7 +183,7 @@ class merchant extends ecjia_merchant {
 	    $filter['rank_id']     = empty($_GET['rank_id'])        ? 0                 : intval($_GET['rank_id']);
 	    
 	    $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : remove_xss($_GET['sort_order']);
-	    $filter['type']   	  = empty($_GET['type'])      	  ? 'buy'             : remove_xss($_GET['type']);
+	    $filter['type']   	  = empty($_GET['type'])      	  ? ''                : remove_xss($_GET['type']);
 	    $filter['sort_by'] 	  = 's.add_time';
 	    
 	    if (!empty($_GET['sort_by'])) {
@@ -212,15 +205,7 @@ class merchant extends ecjia_merchant {
 	    if ($filter['rank_id'] && ($filter['rank_id'] > 0)) {
 	        $db_store_users ->where(RC_DB::raw('u.user_rank'), $filter['rank_id']);
 	    }
-
-        $type_count = $db_store_users->select(RC_DB::raw("SUM(join_scene = 'affiliate') as affiliate"),
-            RC_DB::raw("SUM(join_scene = 'buy') as buy"))->first();
-
-        if ($filter['type']) {
-            $db_store_users->where(RC_DB::raw('s.join_scene'), $filter['type']);
-        }
-
-
+	    
 	    $count = $db_store_users->count();
 	    $page = new ecjia_merchant_page($count, $page_size, 5);
         
@@ -229,7 +214,7 @@ class merchant extends ecjia_merchant {
 	        ->take($page_size)
 	        ->skip($page->start_id-1)
 	        ->get();
-
+        
         $users = array();
         if (!empty($result)) {
             foreach ($result as $rows) {
@@ -249,7 +234,7 @@ class merchant extends ecjia_merchant {
                 $users[] = $rows;
             }
         }
-        return array('list' => $users, 'filter' => $filter, 'count' => $type_count, 'page' => $page->show(2), 'desc' => $page->page_desc());
+        return array('list' => $users, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
 	}
 	
 	private function get_store_user_info($user_id) {

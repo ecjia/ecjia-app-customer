@@ -7,14 +7,6 @@ ecjia.merchant.customer_list.init();
 <!-- {/block} -->
 <!-- {block name="home-content"} -->
 
-<div class="alert alert-info">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-        <i class="fa fa-times" data-original-title="" title=""></i>
-    </button>
-    <strong>{t domain="goods"}温馨提示：{/t}</strong>
-    {t domain="goods"}绑定店铺：指扫描了商家推荐二维码并与商家绑定了关系的会员。{/t}<br>
-</div>
-
 <div class="page-header">
 	<h2 class="pull-left">
 	<!-- {if $ur_here}{$ur_here}{/if} -->
@@ -30,15 +22,8 @@ ecjia.merchant.customer_list.init();
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel">
-            <div class="panel-body panel-body-small">
-                <ul class="nav nav-pills pull-left">
-                    <li class="{if $type eq 'buy'}active{/if}"><a class="data-pjax" href='{url path="#merchant/init" args="type=buy{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.rank_id}&rank_id={$filter.rank_id}{/if}"}'>本店消费<span class="badge badge-info">{if $type_count.buy}{$type_count.buy}{else}0{/if}</span></a></li>
-                    <li class="{if $type eq 'affiliate'}active{/if}"><a class="data-pjax" href='{url path="#merchant/init" args="type=affiliate{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.rank_id}&rank_id={$filter.rank_id}{/if}"}'>绑定店铺<span class="badge badge-info">{if $type_count.affiliate}{$type_count.affiliate}{else}0{/if}</span></a></li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
 			<div class="panel-body panel-body-small">
-				<form class="form-inline" method="post" action="{$search_action}{if $type}&type={$type}{/if}" name="searchForm">
+				<form class="form-inline" method="post" action="{$search_action}" name="searchForm">
 					<select class="w250" name="rank_id" id="select-cat">
 						<option value="0">{t domain="customer"}全部会员等级{/t}</option>
 						<!-- {foreach from=$rank_list key=key item=val} -->
@@ -56,22 +41,24 @@ ecjia.merchant.customer_list.init();
 				<table class="table table-striped table-hover table-hide-edit ecjiaf-tlf">
 					<thead>
 						<tr data-sorthref='{url path="customer/merchant/init" args="{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.rank_id}&rank_id={$filter.rank_id}{/if}"}'>
-							<th>{t domain="customer"}会员信息{/t}</th>
+							<th>{t domain="customer"}会员{/t}</th>
+							<th class="w200">{t domain="customer"}手机号{/t}</th>
 							<th class="w130 sorting" data-toggle="sortby" data-sortby="buy_times">{t domain="customer"}购次{/t}</th>
 							<th class="w130 sorting" data-toggle="sortby" data-sortby="buy_amount">{t domain="customer"}消费金额{/t}</th>
 							<th>{t domain="customer"}会员等级{/t}</th>
 							<th>{t domain="customer"}最近购买时间{/t}</th>
-							<th>{if $type eq 'affiliate'}绑定时间{else}{t domain="customer"}开通时间{/t}{/if}</th>
+							<th>{t domain="customer"}开通时间{/t}</th>
 						</tr>
 					</thead>
 					<tbody>
 					<!-- {foreach from=$user_list.list item=list} -->
 						<tr>
+							<td>
+								<img alt="" src="{if $list.avatar_img}{$list.avatar_img}{else}{$ecjia_main_static_url}img/ecjia_avatar.jpg{/if}" width="40"><br>
+								<span>{$list.user_name}</span>
+							</td>
 							<td class="hide-edit-area">
-                                <div>
-                                    <img class="pull-left m_r5" src="{if $list.avatar_img}{$list.avatar_img}{else}{$ecjia_main_static_url}img/ecjia_avatar.jpg{/if}" width="40">
-                                    <div class="cursor_pointer" >{$list.user_name}<br>{$list.mobile_phone}</div>
-                                </div>
+								<span class="cursor_pointer" >{$list.mobile_phone}</span>
 								<div class="edit-list">
 									<a class="data-pjax" href='{RC_Uri::url("customer/merchant/info", "user_id={$list.user_id}")}' title="{t domain="customer"}查看详情{/t}">{t domain="customer"}查看详情{/t}</a>
 								</div>
