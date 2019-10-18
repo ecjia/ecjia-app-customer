@@ -200,8 +200,8 @@ class merchant extends ecjia_merchant {
     	    ->leftJoin('users as u', RC_DB::raw('u.user_id'), '=', RC_DB::raw('s.user_id'));
 	    
 	    if (!empty($filter['keywords'])) {
-	        $db_store_users ->where(RC_DB::raw('u.user_name'), 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
-	    }
+            $db_store_users ->whereRaw('(u.user_name  like  "%'.mysql_like_quote($filter['keywords']).'%" or u.mobile_phone = "'.mysql_like_quote($filter['keywords']).'")');
+        }
 	    if ($filter['rank_id'] && ($filter['rank_id'] > 0)) {
 	        $db_store_users ->where(RC_DB::raw('u.user_rank'), $filter['rank_id']);
 	    }

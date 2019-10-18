@@ -32,7 +32,7 @@ ecjia.merchant.customer_list.init();
 					</select>
 					<a class="btn btn-primary m_l5 screen-btn"><i class="fa fa-search"></i> {t domain="customer"}筛选{/t}</a>
 					<div class="f_r form-group">
-						<input type="text" name="keywords" class="form-control" value="{$smarty.get.keywords}" placeholder="{t domain="customer"}请输入会员名{/t}"/>
+						<input type="text" name="keywords" class="form-control" value="{$smarty.get.keywords}" placeholder="{t domain="customer"}请输入会员名或手机号{/t}"/>
 						<a class="btn btn-primary m_l5 search_articles"><i class="fa fa-search"></i> {t domain="customer"}搜索{/t}</a>
 					</div>
 				</form>
