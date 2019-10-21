@@ -56,18 +56,28 @@ class merchant extends ecjia_merchant {
     public function __construct() {
         parent::__construct();
 
-        RC_Style::enqueue_style('jquery-placeholder');
-        RC_Style::enqueue_style('uniform-aristo');
-        RC_Script::enqueue_script('smoke');
-        RC_Script::enqueue_script('jquery-ui');
         RC_Script::enqueue_script('jquery-form');
-        RC_Script::enqueue_script('jquery-colorbox');
-        RC_Style::enqueue_style('jquery-colorbox');
+        RC_Script::enqueue_script('smoke');
+        RC_Style::enqueue_style('uniform-aristo');
+
+
+        RC_Script::enqueue_script('bootstrap-fileupload-script', dirname(RC_App::app_dir_url(__FILE__)) . '/merchant/statics/assets/bootstrap-fileupload/bootstrap-fileupload.js', array());
+        RC_Style::enqueue_style('bootstrap-fileupload', dirname(RC_App::app_dir_url(__FILE__)) . '/merchant/statics/assets/bootstrap-fileupload/bootstrap-fileupload.css', array(), false, false);
+
+
+        //时间控件
+        RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
+        RC_Style::enqueue_style('datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.min.css'));
+        RC_Script::enqueue_script('bootstrap-datepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datepicker.min.js'));
+        RC_Script::enqueue_script('bootstrap-datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.js'));
 
         RC_Script::enqueue_script('merchant_list', RC_App::apps_url('statics/js/merchant_list.js', __FILE__), array(), false, 1);
 
     }
 
+    /**
+     * 商家会员
+     */
     /**
      * 商家会员
      */
@@ -77,17 +87,91 @@ class merchant extends ecjia_merchant {
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('商家会员', 'customer')));
         $this->assign('ur_here', __('商家会员', 'customer'));
 
+        $action_link = array(
+            'href' => RC_Uri::url('customer/merchant/download'),
+            'text' => '导出报表'
+        );
+
+        $this->assign('action_link', $action_link);
+
+        /* 时间参数 */
+        $start_time = !empty($_GET['start_time']) ? $_GET['start_time'] : '';
+        $end_time   = !empty($_GET['end_time']) ? $_GET['end_time'] : '';
+
+        $this->assign('start_time', $start_time);
+        $this->assign('end_time', $end_time);
+
         RC_Loader::load_app_func('admin_user', 'user');
 
         $rank_list = get_user_rank_list();
         $this->assign('rank_list', $rank_list);
 
         $user_list = $this->get_store_user_list();
+
         $this->assign('user_list', $user_list);
         $this->assign('form_action', RC_Uri::url('customer/merchant/init'));
         $this->assign('search_action', RC_Uri::url('customer/merchant/init'));
 
         return $this->display('member_list.dwt');
+    }
+
+    public function download()
+    {
+
+        $act = $_GET['act'];
+
+        $data = array();
+        $file = '';
+
+        if (empty($act))
+        {
+            $data = $this->get_store_user_list();
+
+            $list = array();
+            foreach ($data['list'] as $key => $value)
+            {
+                $list[$key]['user_name'] = $value['user_name'];
+                $list[$key]['mobile_phone'] = $value['mobile_phone'];
+                $list[$key]['buy_times'] = $value['buy_times'];
+                $list[$key]['buy_amount'] = $value['buy_amount'];
+                $list[$key]['his_shop_amount'] = $value['his_shop_amount'];
+                $list[$key]['rank_name'] = $value['rank_name'];
+                if ($value['join_scene'] == 'qrcode')
+                {
+                    $list[$key]['join_scene'] = '推广二维码';
+                }
+                elseif ($value['join_scene'] == 'quickpay')
+                {
+                    $list[$key]['join_scene'] = '门店买单';
+                }
+                elseif ($value['join_scene'] == 'cashier_suggest')
+                {
+                    $list[$key]['join_scene'] = '收银员推荐';
+                }
+                elseif ($value['join_scene'] == 'buy')
+                {
+                    $list[$key]['join_scene'] = '店铺消费';
+                }
+                else{
+                    $list[$key]['join_scene'] = '其他方式';
+                }
+
+                $list[$key]['last_buy_time_format'] = !empty($value['last_buy_time_format']) ? $value['last_buy_time_format'] : '无';
+                $list[$key]['add_time_format'] = $value['add_time_format'];
+
+            }
+            $file = '商家会员列表.xls';
+        }
+
+        $item = $list;
+
+        RC_Excel::load(RC_APP_PATH . 'customer' . DIRECTORY_SEPARATOR . 'statics/files/' . $file, function ($excel) use ($item) {
+            $excel->sheet('First sheet', function ($sheet) use ($item) {
+                foreach ($item as $k => $v) {
+                    $sheet->appendRow($k + 2, $v);
+                }
+            });
+        })->download('xls');
     }
 
     public function fans() {
@@ -173,6 +257,7 @@ class merchant extends ecjia_merchant {
 
         return array('list' => $order, 'page' => $page->show(2), 'desc' => $page->page_desc(), 'count' => $count);
     }
+
     /**
      * 获取列表
      */
@@ -182,8 +267,12 @@ class merchant extends ecjia_merchant {
         $filter['keywords']   = empty($_GET['keywords'])      ? ''                : remove_xss($_GET['keywords']);
         $filter['rank_id']     = empty($_GET['rank_id'])        ? 0                 : intval($_GET['rank_id']);
 
+        $filter['start_time']     = empty($_GET['start_time'])        ? 0                 : $_GET['start_time'];
+        $filter['end_time']     = empty($_GET['end_time'])        ? 0                 : $_GET['end_time'];
+
+
         $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : remove_xss($_GET['sort_order']);
-        $filter['type']   	  = empty($_GET['type'])      	  ? ''                : remove_xss($_GET['type']);
+        $filter['type']   	  = empty($_GET['type'])      	  ? 'buy'             : remove_xss($_GET['type']);
         $filter['sort_by'] 	  = 's.add_time';
 
         if (!empty($_GET['sort_by'])) {
@@ -205,6 +294,28 @@ class merchant extends ecjia_merchant {
         if ($filter['rank_id'] && ($filter['rank_id'] > 0)) {
             $db_store_users ->where(RC_DB::raw('u.user_rank'), $filter['rank_id']);
         }
+
+        if ($filter['start_time']) {
+            $start_time = RC_Time::local_strtotime($filter['start_time']);
+            $db_store_users->where('add_time', '>=', $start_time);
+
+        }
+
+        if ($filter['end_time']) {
+            $end_time = RC_Time::local_strtotime($filter['end_time']) + 65535;
+            $db_store_users->where('add_time', '<=', $end_time);
+
+        }
+
+        $type_count = $db_store_users->select(RC_DB::raw("SUM(join_scene = 'affiliate') as affiliate"),
+            RC_DB::raw("SUM(join_scene = 'buy') as buy"))->first();
+
+        if ($filter['type']) {
+            $db_store_users->where(RC_DB::raw('s.join_scene'), $filter['type']);
+        }
+
+
+
 
         $count = $db_store_users->count();
         $page = new ecjia_merchant_page($count, $page_size, 5);
@@ -234,7 +345,7 @@ class merchant extends ecjia_merchant {
                 $users[] = $rows;
             }
         }
-        return array('list' => $users, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
+        return array('list' => $users, 'filter' => $filter, 'count' => $type_count, 'page' => $page->show(2), 'desc' => $page->page_desc());
     }
 
     private function get_store_user_info($user_id) {
