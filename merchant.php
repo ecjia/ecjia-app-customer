@@ -144,7 +144,6 @@ class merchant extends ecjia_merchant {
                 $list[$key]['mobile_phone'] = $value['mobile_phone'];
                 $list[$key]['buy_times'] = $value['buy_times'];
                 $list[$key]['buy_amount'] = $value['buy_amount'];
-                $list[$key]['his_shop_amount'] = $value['his_shop_amount'];
                 $list[$key]['rank_name'] = $value['rank_name'];
                 if ($value['join_scene'] == 'qrcode')
                 {
