@@ -78,17 +78,27 @@ class merchant extends ecjia_merchant {
     /**
      * 商家会员
      */
-    /**
-     * 商家会员
-     */
     public function init() {
         $this->admin_priv('store_member');
         ecjia_screen::get_current_screen()->remove_last_nav_here();
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('商家会员', 'customer')));
         $this->assign('ur_here', __('商家会员', 'customer'));
 
+        $url_parames = RC_Uri::url('customer/merchant/download');
+        if(!empty($_GET['keywords'])) {
+            $url_parames .= '&keywords='.$_GET['keywords'];
+        }
+        if(!empty($_GET['start_date'])) {
+            $url_parames .= '&start_date='.$_GET['start_date'];
+        }
+        if(!empty($_GET['end_date'])) {
+            $url_parames .= '&end_date='.$_GET['end_date'];
+        }
+        if(!empty($_GET['rank_id'])) {
+            $url_parames .= '&rank_id='.$_GET['rank_id'];
+        }
         $action_link = array(
-            'href' => RC_Uri::url('customer/merchant/download'),
+            'href' => $url_parames,
             'text' => '导出报表'
         );
 
@@ -125,7 +135,7 @@ class merchant extends ecjia_merchant {
 
         if (empty($act))
         {
-            $data = $this->get_store_user_list();
+            $data = $this->get_store_user_list(99999);
 
             $list = array();
             foreach ($data['list'] as $key => $value)
