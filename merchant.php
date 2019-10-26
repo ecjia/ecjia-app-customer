@@ -281,7 +281,7 @@ class merchant extends ecjia_merchant {
 
 
         $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : remove_xss($_GET['sort_order']);
-        $filter['type']   	  = empty($_GET['type'])      	  ? 'buy'             : remove_xss($_GET['type']);
+        $filter['type']   	  = $_GET['type'];
         $filter['sort_by'] 	  = 's.add_time';
 
         if (!empty($_GET['sort_by'])) {
@@ -322,8 +322,6 @@ class merchant extends ecjia_merchant {
         if ($filter['type']) {
             $db_store_users->where(RC_DB::raw('s.join_scene'), $filter['type']);
         }
-
-
 
 
         $count = $db_store_users->count();
