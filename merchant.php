@@ -338,6 +338,8 @@ class merchant extends ecjia_merchant {
         $users = array();
         if (!empty($result)) {
             foreach ($result as $rows) {
+                $rows['user_name'] = !empty($rows['user_name']) ? $rows['user_name'] : '/';
+                $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? $rows['mobile_phone'] : '/';
                 $rows['add_time_format'] = !empty($rows['add_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['add_time']) : '';
                 $rows['last_buy_time_format'] = !empty($rows['last_buy_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['last_buy_time']): '';
                 if ($rows['user_rank'] == 0 && !empty($rows['user_name'])) {
