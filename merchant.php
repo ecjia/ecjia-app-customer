@@ -346,6 +346,7 @@ class merchant extends ecjia_merchant {
                 } else {
                     $rank = RC_DB::table('user_rank')->select('rank_id', 'rank_name')->where('rank_id', $rows['user_rank'])->first();
                 }
+                $rows['user_name'] = !empty($rows['user_name']) ? $rows['user_name'] : '';
                 $rows['avatar_img'] = !empty($rows['avatar_img']) ? RC_Upload::upload_url($rows['avatar_img']) : '';
                 $rows['rank_name'] = $rank['rank_name'];
                 $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '';
