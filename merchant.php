@@ -339,7 +339,6 @@ class merchant extends ecjia_merchant {
         if (!empty($result)) {
             foreach ($result as $rows) {
                 $rows['user_name'] = !empty($rows['user_name']) ? $rows['user_name'] : '/';
-                $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? $rows['mobile_phone'] : '/';
                 $rows['add_time_format'] = !empty($rows['add_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['add_time']) : '';
                 $rows['last_buy_time_format'] = !empty($rows['last_buy_time']) ? RC_Time::local_date('Y-m-d H:i', $rows['last_buy_time']): '';
                 if ($rows['user_rank'] == 0 && !empty($rows['user_name'])) {
@@ -350,7 +349,7 @@ class merchant extends ecjia_merchant {
                 }
                 $rows['avatar_img'] = !empty($rows['avatar_img']) ? RC_Upload::upload_url($rows['avatar_img']) : '';
                 $rows['rank_name'] = !empty($rank['rank_name']) ? $rank['rank_name'] : '/';
-                $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '';
+                $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '/';
                 //订单总金额（普通配送订单，不含退款）
                 $rows['buy_amount'] = price_format($rows['buy_amount']);
                 $users[] = $rows;
