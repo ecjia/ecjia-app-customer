@@ -146,8 +146,8 @@ class merchant extends ecjia_merchant {
 
                 $list[$key]['user_name'] = !empty($value['user_name']) ? $user_name ."\t" : '/';
                 $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] . "\t" : '/';
-                $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] ."\t" : 0;
-                $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] ."\t" : 0;
+                $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] ."\t" : '/';
+                $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] ."\t" : '0.00';
                 $list[$key]['rank_name'] = !empty($value['rank_name']) ? $value['rank_name'] ."\t" : '/';
 
 
