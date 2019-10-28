@@ -144,7 +144,7 @@ class merchant extends ecjia_merchant {
                 $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] : '/';
                 $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] : '/';
                 $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] : 0;
-                $list[$key]['rank_name'] = !$value['rank_name'] ? $value['rank_name'] : '/';
+                $list[$key]['rank_name'] = !empty($value['rank_name']) ? $value['rank_name'] : '/';
                 if ($value['join_scene'] == 'qrcode')
                 {
                     $list[$key]['join_scene'] = '推广二维码';
@@ -307,7 +307,6 @@ class merchant extends ecjia_merchant {
         if ($filter['start_time']) {
             $start_time = RC_Time::local_strtotime($filter['start_time']);
             $db_store_users->where('add_time', '>=', $start_time);
-
         }
 
         if ($filter['end_time']) {
