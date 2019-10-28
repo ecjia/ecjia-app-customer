@@ -140,10 +140,11 @@ class merchant extends ecjia_merchant {
             $list = array();
             foreach ($data['list'] as $key => $value)
             {
-                preg_match_all("/[\x{4e00}-\x{9fa5}|0-9|a-z|A-Z|_]/u", $value['user_name'], $matches);
-                $value['user_name'] = isset($matches[0]) ? implode('', $matches[0]) : '';
+                $user_name = json_encode($value['user_name']);
+                $user_name = preg_replace("/\\\u[ed][0-9a-f]{3}\\\u[ed][0-9a-f]{3}/","*",$user_name);//替换成*
+                $user_name = json_decode($user_name);
 
-                $list[$key]['user_name'] = !empty($value['user_name']) ? $value['user_name'] ."\t" : '/';
+                $list[$key]['user_name'] = !empty($value['user_name']) ? $user_name ."\t" : '/';
                 $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] . "\t" : '/';
                 $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] ."\t" : 0;
                 $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] ."\t" : 0;
