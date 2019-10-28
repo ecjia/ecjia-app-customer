@@ -143,11 +143,11 @@ class merchant extends ecjia_merchant {
                 preg_match_all("/[\x{4e00}-\x{9fa5}|0-9|a-z|A-Z|_]/u", $value['user_name'], $matches);
                 $value['user_name'] = isset($matches[0]) ? implode('', $matches[0]) : '';
 
-                $list[$key]['user_name'] = !empty($value['user_name']) ? $value['user_name'] ."\t" : '无';
-                $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] . "\t" : '无';
-                $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] ."\t" : '无';
+                $list[$key]['user_name'] = !empty($value['user_name']) ? $value['user_name'] ."\t" : '/';
+                $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] . "\t" : '/';
+                $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] ."\t" : 0;
                 $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] ."\t" : 0;
-                $list[$key]['rank_name'] = !empty($value['rank_name']) ? $value['rank_name'] ."\t" : '无';
+                $list[$key]['rank_name'] = !empty($value['rank_name']) ? $value['rank_name'] ."\t" : '/';
 
 
                 if ($value['join_scene'] == 'qrcode') {
@@ -162,8 +162,8 @@ class merchant extends ecjia_merchant {
                     $list[$key]['join_scene'] = '其他方式';
                 }
 
-                $list[$key]['last_buy_time_format'] = !empty($value['last_buy_time_format']) ? $value['last_buy_time_format'] ."\t": '无';
-                $list[$key]['add_time_format'] = !empty($value['add_time_format']) ? $value['add_time_format']."\t" : '无';
+                $list[$key]['last_buy_time_format'] = !empty($value['last_buy_time_format']) ? $value['last_buy_time_format'] ."\t": '/';
+                $list[$key]['add_time_format'] = !empty($value['add_time_format']) ? $value['add_time_format']."\t" : '/';
             }
             $file = 'customer_list.xls';
         }
@@ -342,7 +342,7 @@ class merchant extends ecjia_merchant {
                 $rows['user_name'] = !empty($rows['user_name']) ? $rows['user_name'] : '';
                 $rows['avatar_img'] = !empty($rows['avatar_img']) ? RC_Upload::upload_url($rows['avatar_img']) : '';
                 $rows['rank_name'] = $rank['rank_name'];
-                $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? $rows['mobile_phone'] : '';
+                $rows['mobile_phone'] = !empty($rows['mobile_phone']) ? substr_replace($rows['mobile_phone'],'****',3,4) : '';
                 //订单总金额（普通配送订单，不含退款）
                 $rows['buy_amount'] = price_format($rows['buy_amount']);
                 $users[] = $rows;
