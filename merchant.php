@@ -140,11 +140,11 @@ class merchant extends ecjia_merchant {
             $list = array();
             foreach ($data['list'] as $key => $value)
             {
-                $list[$key]['user_name'] = !empty($value['user_name']) ? $value['user_name'] .'/t' : '无';
-                $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] . '/t' : '无';
-                $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] .'/t' : '无';
-                $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] .'/t' : 0;
-                $list[$key]['rank_name'] = !empty($value['rank_name']) ? $value['rank_name'] .'/t' : '无';
+                $list[$key]['user_name'] = !empty($value['user_name']) ? $value['user_name'] ."\t" : '无';
+                $list[$key]['mobile_phone'] = !empty($value['mobile_phone']) ? $value['mobile_phone'] . "\t" : '无';
+                $list[$key]['buy_times'] = !empty($value['buy_times']) ? $value['buy_times'] ."\t" : '无';
+                $list[$key]['buy_amount'] = !empty($value['buy_amount']) ? $value['buy_amount'] ."\t" : 0;
+                $list[$key]['rank_name'] = !empty($value['rank_name']) ? $value['rank_name'] ."\t" : '无';
 
 
                 if ($value['join_scene'] == 'qrcode') {
@@ -159,8 +159,8 @@ class merchant extends ecjia_merchant {
                     $list[$key]['join_scene'] = '其他方式';
                 }
 
-                $list[$key]['last_buy_time_format'] = !empty($value['last_buy_time_format']) ? $value['last_buy_time_format'] .'/t': '无';
-                $list[$key]['add_time_format'] = !empty($value['add_time_format']) ? $value['add_time_format'].'/t' : '无';
+                $list[$key]['last_buy_time_format'] = !empty($value['last_buy_time_format']) ? $value['last_buy_time_format'] ."\t": '无';
+                $list[$key]['add_time_format'] = !empty($value['add_time_format']) ? $value['add_time_format']."\t" : '无';
             }
             $file = 'customer_list.xls';
         }
