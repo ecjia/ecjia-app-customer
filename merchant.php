@@ -116,7 +116,7 @@ class merchant extends ecjia_merchant {
         $rank_list = get_user_rank_list();
         $this->assign('rank_list', $rank_list);
 
-        $user_list = $this->get_store_user_list();
+        $user_list = $this->get_store_user_list(10);
 
         $this->assign('user_list', $user_list);
         $this->assign('form_action', RC_Uri::url('customer/merchant/init'));
@@ -270,17 +270,17 @@ class merchant extends ecjia_merchant {
     /**
      * 获取列表
      */
-    private function get_store_user_list($page_size=10) {
+    private function get_store_user_list($page_size) {
 
         $filter = array();
-        $filter['keywords']   = empty($_GET['keywords'])      ? ''                : remove_xss($_GET['keywords']);
-        $filter['rank_id']     = empty($_GET['rank_id'])        ? 0                 : intval($_GET['rank_id']);
+        $filter['keywords']   = empty($_GET['keywords'])      ? ''                : $_GET['keywords'];
+        $filter['rank_id']     = empty($_GET['rank_id'])        ? 0                 : $_GET['rank_id'];
 
         $filter['start_time']     = empty($_GET['start_time'])        ? 0                 : $_GET['start_time'];
         $filter['end_time']     = empty($_GET['end_time'])        ? 0                 : $_GET['end_time'];
 
 
-        $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : remove_xss($_GET['sort_order']);
+        $filter['sort_order'] = empty($_GET['sort_order'])    ? 'DESC'            : $_GET['sort_order'];
         $filter['type']   	  = $_GET['type'];
         $filter['sort_by'] 	  = 's.add_time';
 
